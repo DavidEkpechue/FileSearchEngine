@@ -39,10 +39,18 @@ public class PrimaryController {
     private Stage primaryStage;
     private ObservableList<String> selectedFiles = FXCollections.observableArrayList();
 
+    /**
+     * Sets the primary stage for the JavaFX application.
+     *
+     * @param  primaryStage  the primary stage to be set
+     */
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
 
+    /**
+     * Initializes the file list view and sets up the selection mode and listener for displaying file contents.
+     */
     @FXML
     private void initialize() {
         fileListView.setItems(selectedFiles);
@@ -54,6 +62,12 @@ public class PrimaryController {
         });
     }
 
+    /**
+     * Selects a file using a FileChooser and adds the selected file's absolute path to a list of selected files.
+     *
+     * @param  None
+     * @return None
+     */
     @FXML
     private void selectFile() {
         FileChooser fileChooser = new FileChooser();
@@ -65,6 +79,12 @@ public class PrimaryController {
         }
     }
 
+    /**
+     * Updates the file path area with the selected files.
+     *
+     * @param  None
+     * @return None
+     */
     private void updateFilePathArea() {
         StringBuilder filePaths = new StringBuilder();
         for (String filePath : selectedFiles) {
@@ -73,29 +93,50 @@ public class PrimaryController {
         filePathArea.setText(filePaths.toString());
     }
 
+    /**
+     * Perform a case-insensitive search through selected files for a given search term,
+     * and display the matching files in the file list view.
+     *
+     */
     @FXML
     private void searchFile() {
-        String searchTerm = searchTermField.getText().toLowerCase(); // Convert to lowercase for case-insensitive search
+        String searchTerm = searchTermField.getText().toLowerCase(); 
+        String[] searchWords = searchTerm.split("\\s*,\\s*"); 
         ObservableList<String> filteredFiles = FXCollections.observableArrayList();
     
         for (String filePath : selectedFiles) {
             try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    if (line.toLowerCase().contains(searchTerm)) {
-                        filteredFiles.add(filePath);
-                        break; // Once a match is found, no need to continue searching this file
+                boolean matchFound = true; 
+                for (String word : searchWords) {
+                    boolean wordFound = false; 
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        if (line.toLowerCase().contains(word.trim())) {
+                            wordFound = true;
+                            break; 
+                        }
+                    }
+                    if (!wordFound) {
+                        matchFound = false; 
                     }
                 }
+                if (matchFound) {
+                    filteredFiles.add(filePath);
+                }
             } catch (IOException e) {
-                // Handle IOException if needed
             }
         }
     
         fileListView.setItems(filteredFiles);
     }
     
+    
 
+    /**
+     * Displays the contents of a file in a text area.
+     *
+     * @param  filePath  the path of the file to be displayed
+     */ 
     @FXML
     private void displayFileContents(String filePath) {
         StringBuilder fileContents = new StringBuilder();
