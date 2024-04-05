@@ -2,6 +2,7 @@ package com.search;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
@@ -35,6 +36,9 @@ public class PrimaryController {
     @FXML
     private ListView<String> fileListView;
 
+    @FXML
+    private Button exitButton;
+
 
     private Stage primaryStage;
     private ObservableList<String> selectedFiles = FXCollections.observableArrayList();
@@ -46,6 +50,23 @@ public class PrimaryController {
      */
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
+    }
+
+    /**
+     *
+     * Option to exit application.
+     */
+    public void exit(ActionEvent event){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Exit");
+        alert.setContentText("Are you sure you want to exit?");
+
+        if(alert.showAndWait().get() == ButtonType.OK){
+            primaryStage = (Stage) exitButton.getScene().getWindow();
+            System.out.println("You Have Exited This Application!");
+            primaryStage.close();
+        }
+
     }
 
     /**
