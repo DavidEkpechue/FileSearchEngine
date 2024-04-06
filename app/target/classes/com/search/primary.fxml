@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextArea?>
@@ -9,8 +10,8 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="868.0" prefWidth="708.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.search.PrimaryController">
    <children>
-      <Label fx:id="searchTermLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="433.0" layoutY="71.0" prefHeight="41.0" prefWidth="99.0" text="search term" textAlignment="CENTER" />
-      <TextField fx:id="searchTermField" layoutX="280.0" layoutY="79.0" onAction="#searchFile" />
+      <Label fx:id="searchTermLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="434.0" layoutY="6.0" prefHeight="41.0" prefWidth="99.0" text="search term" textAlignment="CENTER" />
+      <TextField fx:id="searchTermField" layoutX="545.0" layoutY="14.0" onAction="#searchFile" />
       <Label fx:id="filePathLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="325.0" layoutY="153.0" prefHeight="41.0" prefWidth="99.0" text="File path" textAlignment="CENTER" />
       <TextArea fx:id="searchResultsArea" editable="false" layoutX="34.0" layoutY="258.0" prefHeight="377.0" prefWidth="291.0" wrapText="true" />
       <Button fx:id="selectFileButton" layoutX="30.0" layoutY="137.0" mnemonicParsing="false" onAction="#selectFile" prefHeight="68.0" prefWidth="46.0" text="file" />
@@ -19,5 +20,6 @@
       <Label layoutX="509.0" layoutY="229.0" text="Files" />
       <Label layoutX="176.0" layoutY="229.0" text="Text" />
       <Button fx:id="exitButton" layoutX="328.0" layoutY="707.0" mnemonicParsing="false" onAction="#exit" text="Exit" />
+      <ColorPicker layoutX="312.0" layoutY="14.0" />
    </children>
 </AnchorPane>

@@ -5,6 +5,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -38,6 +42,10 @@ public class PrimaryController {
 
     @FXML
     private Button exitButton;
+    @FXML
+    private Pane myPane;
+    @FXML
+    private ColorPicker myColorPicker;
 
 
     private Stage primaryStage;
@@ -67,6 +75,15 @@ public class PrimaryController {
             primaryStage.close();
         }
 
+    }
+
+    /**
+     *
+     * Option to change background colour.
+     */
+    public void setMyColorPicker(ActionEvent event){
+        Color myColor = myColorPicker.getValue();
+        myPane.setBackground(new Background(new BackgroundFill(myColor, null,null)));
     }
 
     /**
