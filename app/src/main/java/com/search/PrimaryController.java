@@ -14,7 +14,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
+import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
 import java.util.Comparator;
 
 
@@ -97,12 +98,17 @@ public class PrimaryController {
         occurrenceColumn.setCellValueFactory(cellData -> cellData.getValue().occurrenceProperty().asObject());
         fileListView.setItems(selectedFiles);
         fileListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        
+        // Listener for fileListView selection change
         fileListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
+                // Update word occurrences for the focused file
+                updateWordTableView(newValue);
                 displayFileContents(newValue);
             }
         });
     }
+    
 
     /**
      * Selects a file using a FileChooser and adds the selected file's absolute path to a list of selected files.
@@ -166,15 +172,55 @@ public class PrimaryController {
         }
     
         // Update the word table view
-        updateWordTableView();
+        //updateWordTableView();
+        // Rank files based on search results
+        rankFilesBySearchResults();
     }
     
     
 
+    private void rankFilesBySearchResults() {
+        // Create a comparator to compare files based on the number of search results
+        Comparator<File> fileComparator = (file1, file2) -> {
+            int results1 = countSearchResults(file1);
+            int results2 = countSearchResults(file2);
+            return Integer.compare(results2, results1); // Descending order
+        };
+    
+        // Sort the selectedFiles list using the comparator
+        selectedFiles.sort(fileComparator);
+    
+        // Update the file list view with the sorted files
+        fileListView.setItems(selectedFiles);
+    }
+    
+    private int countSearchResults(File file) {
+        int count = 0;
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] words = line.split("\\s+");
+                for (String word : words) {
+                    if (word.toLowerCase().contains(searchTermField.getText().toLowerCase())) {
+                        count++;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); // Handle the exception appropriately
+        }
+        return count;
+    }
+    
     
     
 
     private void displayFileContents(File file) {
+        if (file == null) {
+            searchResultsArea.setText(""); // Clear the search results area
+            return; // Return immediately if file is null
+        }
+    
         StringBuilder fileContents = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
@@ -186,7 +232,7 @@ public class PrimaryController {
         }
         searchResultsArea.setText(fileContents.toString());
     }
-
+    
 
     
     
@@ -210,12 +256,37 @@ public class PrimaryController {
         searchResultsArea.setText(fileContents.toString());
     }
 
-    private void updateWordTableView() {
+    private void updateWordTableView(File file) {
         ObservableList<WordOccurrence> wordOccurrenceList = FXCollections.observableArrayList();
+        Map<String, Integer> wordOccurrences = new HashMap<>(); // Clear previous results
+    
+        String[] searchTerms = searchTermField.getText().toLowerCase().split(",");
+    
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] words = line.split("\\s+");
+                for (String searchTerm : searchTerms) {
+                    for (String word : words) {
+                        if (word.toLowerCase().contains(searchTerm.trim())) { // Trim the term to remove leading/trailing spaces
+                            wordOccurrences.put(word, wordOccurrences.getOrDefault(word, 0) + 1);
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); // Handle the exception appropriately
+        }
+    
+        // Populate wordOccurrenceList with word occurrences
         for (Map.Entry<String, Integer> entry : wordOccurrences.entrySet()) {
             wordOccurrenceList.add(new WordOccurrence(entry.getKey(), entry.getValue()));
         }
+    
+        // Update the word table view
         wordTableView.setItems(wordOccurrenceList);
     }
+    
+    
 }
 
