@@ -27,8 +27,7 @@ public class App extends Application {
         scene = new Scene(root);
         
         // Load CSS file for styling
-        //String css = this.getClass().getResource("appStyle.css").toExternalForm();
-        //scene.getStylesheets().add(css);
+        scene.getStylesheets().add(getClass().getResource("AppStyle.css").toExternalForm());
         
         // Set up the stage
         stage.setTitle("App");

@@ -5,10 +5,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -16,6 +12,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import java.util.Comparator;
+
+
+
+
 
 public class PrimaryController {
 
@@ -37,19 +41,28 @@ public class PrimaryController {
     @FXML
     private TextArea searchResultsArea;
 
-    @FXML
-    private ListView<String> fileListView;
+     @FXML
+    private ListView<File> fileListView;
 
     @FXML
     private Button exitButton;
+
     @FXML
-    private Pane myPane;
+    private TableView<WordOccurrence> wordTableView;
+
     @FXML
-    private ColorPicker myColorPicker;
+    private TableColumn<WordOccurrence, String> wordColumn;
+
+    @FXML
+    private TableColumn<WordOccurrence, Integer> occurrenceColumn;
+    
+
 
 
     private Stage primaryStage;
-    private ObservableList<String> selectedFiles = FXCollections.observableArrayList();
+    private ObservableList<File> selectedFiles = FXCollections.observableArrayList();
+    private Map<String, Integer> wordOccurrences = new HashMap<>();
+
 
     /**
      * Sets the primary stage for the JavaFX application.
@@ -77,20 +90,11 @@ public class PrimaryController {
 
     }
 
-    /**
-     *
-     * Option to change background colour.
-     */
-    public void setMyColorPicker(ActionEvent event){
-        Color myColor = myColorPicker.getValue();
-        myPane.setBackground(new Background(new BackgroundFill(myColor, null,null)));
-    }
 
-    /**
-     * Initializes the file list view and sets up the selection mode and listener for displaying file contents.
-     */
     @FXML
     private void initialize() {
+        wordColumn.setCellValueFactory(cellData -> cellData.getValue().wordProperty());
+        occurrenceColumn.setCellValueFactory(cellData -> cellData.getValue().occurrenceProperty().asObject());
         fileListView.setItems(selectedFiles);
         fileListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         fileListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -112,7 +116,7 @@ public class PrimaryController {
         fileChooser.setTitle("Select File");
         File selectedFile = fileChooser.showOpenDialog(primaryStage);
         if (selectedFile != null) {
-            selectedFiles.add(selectedFile.getAbsolutePath());
+            selectedFiles.add(selectedFile);
             updateFilePathArea();
         }
     }
@@ -125,8 +129,8 @@ public class PrimaryController {
      */
     private void updateFilePathArea() {
         StringBuilder filePaths = new StringBuilder();
-        for (String filePath : selectedFiles) {
-            filePaths.append(filePath).append("\n");
+        for (File file : selectedFiles) {
+            filePaths.append(file.getAbsolutePath()).append("\n");
         }
         filePathArea.setText(filePaths.toString());
     }
@@ -138,35 +142,52 @@ public class PrimaryController {
      */
     @FXML
     private void searchFile() {
-        String searchTerm = searchTermField.getText().toLowerCase(); 
-        String[] searchWords = searchTerm.split("\\s*,\\s*"); 
-        ObservableList<String> filteredFiles = FXCollections.observableArrayList();
+        String searchTerm = searchTermField.getText();
     
-        for (String filePath : selectedFiles) {
-            try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-                boolean matchFound = true; 
-                for (String word : searchWords) {
-                    boolean wordFound = false; 
-                    String line;
-                    while ((line = br.readLine()) != null) {
-                        if (line.toLowerCase().contains(word.trim())) {
-                            wordFound = true;
-                            break; 
+        // Clear previous results
+        wordOccurrences.clear();
+    
+        // Search through selected files
+        for (File file : selectedFiles) {
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] words = line.split("\\s+");
+                    for (String word : words) {
+                        if (word.toLowerCase().contains(searchTerm.toLowerCase())) {
+                            // Update word occurrences
+                            wordOccurrences.put(word, wordOccurrences.getOrDefault(word, 0) + 1);
                         }
                     }
-                    if (!wordFound) {
-                        matchFound = false; 
-                    }
-                }
-                if (matchFound) {
-                    filteredFiles.add(filePath);
                 }
             } catch (IOException e) {
+                e.printStackTrace(); // Handle the exception appropriately
             }
         }
     
-        fileListView.setItems(filteredFiles);
+        // Update the word table view
+        updateWordTableView();
     }
+    
+    
+
+    
+    
+
+    private void displayFileContents(File file) {
+        StringBuilder fileContents = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                fileContents.append(line).append("\n");
+            }
+        } catch (IOException e) {
+            fileContents.append("Error reading the file: ").append(e.getMessage());
+        }
+        searchResultsArea.setText(fileContents.toString());
+    }
+
+
     
     
 
@@ -188,4 +209,13 @@ public class PrimaryController {
         }
         searchResultsArea.setText(fileContents.toString());
     }
+
+    private void updateWordTableView() {
+        ObservableList<WordOccurrence> wordOccurrenceList = FXCollections.observableArrayList();
+        for (Map.Entry<String, Integer> entry : wordOccurrences.entrySet()) {
+            wordOccurrenceList.add(new WordOccurrence(entry.getKey(), entry.getValue()));
+        }
+        wordTableView.setItems(wordOccurrenceList);
+    }
 }
+
