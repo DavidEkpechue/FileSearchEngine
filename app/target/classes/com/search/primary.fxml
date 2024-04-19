@@ -14,14 +14,13 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="868.0" prefWidth="708.0" stylesheets="@appStyle.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.search.PrimaryController">
    <children>
-      <Label layoutX="176.0" layoutY="229.0" text="Text" />
       <GridPane layoutX="14.0" layoutY="14.0" prefHeight="836.0" prefWidth="680.0">
         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="96.0" minWidth="10.0" prefWidth="50.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="206.0" minWidth="10.0" prefWidth="206.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="31.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="237.0" minWidth="10.0" prefWidth="177.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="190.0" minWidth="10.0" prefWidth="26.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="257.0" minWidth="0.0" prefWidth="75.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="257.0" minWidth="0.0" prefWidth="182.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="75.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="237.0" minWidth="10.0" prefWidth="115.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="190.0" minWidth="10.0" prefWidth="44.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="189.0" minWidth="10.0" prefWidth="189.0" />
         </columnConstraints>
         <rowConstraints>
@@ -38,18 +37,20 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TableView fx:id="wordTableView" prefHeight="510.0" prefWidth="190.0" GridPane.columnIndex="3" GridPane.rowIndex="5" GridPane.rowSpan="2">
+            <TableView fx:id="wordTableView" prefHeight="510.0" prefWidth="190.0" GridPane.columnIndex="5" GridPane.rowIndex="7" GridPane.rowSpan="2">
               <columns>
-                <TableColumn fx:id="wordColumn" prefWidth="75.0" text="C1" />
-                <TableColumn fx:id="occurrenceColumn" prefWidth="75.0" text="C2" />
+                <TableColumn fx:id="wordColumn" prefWidth="75.0" text="Words" />
+                <TableColumn fx:id="occurrenceColumn" prefWidth="75.0" text="Count" />
               </columns>
             </TableView>
-            <TextArea fx:id="searchResultsArea" editable="false" prefHeight="377.0" prefWidth="291.0" wrapText="true" GridPane.columnSpan="2" GridPane.rowIndex="5" GridPane.rowSpan="2" />
-            <TextField fx:id="searchTermField" onAction="#searchFile" prefWidth="130.0" GridPane.columnIndex="5" />
-            <TextArea fx:id="filePathArea" editable="false" prefHeight="68.0" prefWidth="197.0" GridPane.columnIndex="1" GridPane.rowSpan="3" />
-            <Button fx:id="selectFileButton" mnemonicParsing="false" onAction="#selectFile" prefHeight="68.0" prefWidth="46.0" text="file" GridPane.rowIndex="1" />
-            <Button fx:id="exitButton" mnemonicParsing="false" onAction="#exit" text="Exit" GridPane.rowIndex="10" />
-            <ListView fx:id="fileListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="5" GridPane.rowSpan="2" />
+            <TextArea fx:id="searchResultsArea" editable="false" prefHeight="377.0" prefWidth="291.0" wrapText="true" GridPane.columnSpan="4" GridPane.rowIndex="7" GridPane.rowSpan="2" />
+            <TextField fx:id="searchTermField" onAction="#searchFile" prefWidth="228.0" promptText="Search a term" GridPane.columnIndex="5" />
+            <Button fx:id="selectFileButton" mnemonicParsing="false" onAction="#selectFile" prefHeight="31.0" prefWidth="345.0" text="Add Files" GridPane.columnIndex="1" />
+            <Button fx:id="exitButton" mnemonicParsing="false" onAction="#exit" prefHeight="68.0" prefWidth="51.0" text="Exit" GridPane.rowIndex="10" />
+            <ListView fx:id="fileListView" prefHeight="200.0" prefWidth="200.0" stylesheets="@appStyle.css" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.rowSpan="2" />
+            <TextArea fx:id="searchHistoryArea" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="5" GridPane.rowIndex="2" GridPane.rowSpan="2" />
+            <Label fx:id="suggestedWordLabel" prefHeight="16.0" prefWidth="197.0" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+            <Button fx:id="useSuggestedWordButton" mnemonicParsing="false" onAction="#useSuggestion" text="Use" GridPane.columnIndex="4" GridPane.rowIndex="1" />
          </children>
       </GridPane>
    </children>

@@ -44,10 +44,21 @@
 
 }
 
-.list-view{
+.list-view {
     -fx-control-inner-background: rgb(78, 78, 78);
-
+    -fx-font-size: 10px; /* Adjust the font size as needed */
 }
+
+.list-view .list-cell:filled:selected {
+    -fx-background: lightgrey;
+    -fx-background-color: lightgrey;
+    -fx-text-fill: black; /* Set text color for better visibility */
+    -fx-font-size: 10px; /* Adjust the font size for selected cells */
+}
+
+
+
+
 
 
 /* Set font and color for text in text fields */
