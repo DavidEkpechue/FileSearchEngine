@@ -48,7 +48,6 @@
             <Button fx:id="selectFileButton" mnemonicParsing="false" onAction="#selectFile" prefHeight="31.0" prefWidth="345.0" text="Add Files" GridPane.columnIndex="1" />
             <Button fx:id="exitButton" mnemonicParsing="false" onAction="#exit" prefHeight="68.0" prefWidth="51.0" text="Exit" GridPane.rowIndex="10" />
             <ListView fx:id="fileListView" prefHeight="200.0" prefWidth="200.0" stylesheets="@appStyle.css" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.rowSpan="2" />
-            <TextArea fx:id="searchHistoryArea" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="5" GridPane.rowIndex="2" GridPane.rowSpan="2" />
             <Label fx:id="suggestedWordLabel" prefHeight="16.0" prefWidth="197.0" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="1" />
             <Button fx:id="useSuggestedWordButton" mnemonicParsing="false" onAction="#useSuggestion" text="Use" GridPane.columnIndex="4" GridPane.rowIndex="1" />
          </children>

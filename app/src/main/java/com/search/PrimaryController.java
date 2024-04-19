@@ -60,7 +60,6 @@ public class PrimaryController {
     @FXML
     private Label suggestedWordLabel;
 
-    private String suggestedWordString;
 
     
 
@@ -96,6 +95,13 @@ public class PrimaryController {
 
     }
 
+    /**
+     * This method is an event handler for the useSuggestion action. It retrieves the text from the suggestedWordLabel,
+     * splits it by the ":" delimiter to get the suggested word, and sets the text of the searchTermField to the suggested
+     * word. If the suggested word is not empty, it also hides the suggestedWordLabel.
+     *
+     * @param  event  the ActionEvent triggered by the useSuggestion action
+     */
     @FXML
     private void useSuggestion(ActionEvent event) {
         String suggestedWord = suggestedWordLabel.getText();
